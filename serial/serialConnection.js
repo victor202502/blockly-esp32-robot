@@ -199,7 +199,7 @@ async function _connectWebSerial() {
 }
 
 /**
- * Trennt die WebSerial-Verbindung sicher auf und schließt alle Streams.
+ * Trennt die WebSerial Verbindung sicher auf und schließt alle Streams.
  */
 async function _disconnectWebSerial() {
   try { if (_wsWriter) { await _wsWriter.close(); _wsWriter = null; } } catch(_) {}
