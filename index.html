@@ -6,13 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- BLOCKLY BIBLIOTHEKEN -->
-<!-- Einbindung der lokalen Blockly-Dateien. 'compressed' Versionen sind für die Performance optimiert. -->
 <script src="./node_modules/blockly/blockly_compressed.js"></script>
 <script src="./node_modules/blockly/blocks_compressed.js"></script>
 <script src="./node_modules/blockly/msg/en.js"></script>
 
 <!-- TYPOGRAFIE -->
-<!-- Verwendung von Nunito für die UI-Elemente (modern, freundlich) und JetBrains Mono für den Code. -->
 <link rel="stylesheet" href="./node_modules/@fontsource/nunito/400.css">
 <link rel="stylesheet" href="./node_modules/@fontsource/jetbrains-mono/400.css">
 
@@ -24,7 +22,7 @@
 </head>
 <body>
 
-<!-- HEADER: Globale Steuerelemente für den Verbindungsstatus und Projektmanagement -->
+<!-- HEADER -->
 <header>
   <div class="logo">
     <div class="logo-icon">🤖</div>
@@ -42,24 +40,31 @@
   </div>
 </header>
 
-<!-- TELEMETRY BAR: Live-Daten-Anzeige vom ESP32-S3 (Bridge -> Robot) -->
+<!-- TELEMETRY BAR -->
 <div id="telemBar">
   <span style="font-size:0.9em;font-weight:800;text-transform:uppercase;color:#555;letter-spacing:1px">Telemetry</span>
   <span class="telem-item">Wemos: <span id="tWemos"  style="color:#555">—</span></span>
   <span class="telem-item">Status: <span id="tStatus" style="color:#555">—</span></span>
   <span class="telem-item">Mot A: <span id="tEncA" style="color:#555">—</span>°</span>
   <span class="telem-item">Mot B: <span id="tEncB" style="color:#555">—</span>°</span>
-  
-  <!-- SENSOR-ANZEIGE: Zeigt den erkannten Farbwert inklusive eines farbigen Indikator-Box -->
-  <span class="telem-item">Color: 
-    <span id="tColorText" style="color:#555; font-weight:700;">—</span>
-    <div id="tColorBox" style="width: 16px; height: 16px; display: inline-block; vertical-align: sub; margin-left: 6px; border-radius: 4px; border: 1px solid #444; background: transparent;"></div>
+
+  <!-- DISTANCIA VL53L1X -->
+  <span class="telem-item">Dist:
+    <span id="tDist" style="color:#555; font-weight:700; font-family:monospace;">—</span>
+    <span style="color:#888; font-size:0.85em;">mm</span>
   </span>
 
-  <span class="telem-item">Last CMD: <span id="tCmd"  style="color:#888;font-family:monospace">—</span></span>
+  <!-- COLOR AS7341 -->
+  <span class="telem-item">Color:
+    <span id="tColorText" style="color:#555; font-weight:700;">—</span>
+    <div id="tColorBox" style="width:16px;height:16px;display:inline-block;vertical-align:sub;
+         margin-left:6px;border-radius:4px;border:1px solid #444;background:transparent;"></div>
+  </span>
+
+  <span class="telem-item">Last CMD: <span id="tCmd" style="color:#888;font-family:monospace">—</span></span>
 </div>
 
-<!-- MAIN AREA: Zweispaltiges Layout (Blockly-Workspace links, Info-Panel rechts) -->
+<!-- MAIN AREA -->
 <div id="main">
   <div id="blocklyArea">
     <div id="blocklyDiv"></div>
@@ -71,7 +76,6 @@
       <div class="side-tab"        onclick="window.switchTab('console')">💻 Console</div>
     </div>
     <div class="side-content active" id="tab-code">
-      <!-- Hier wird der generierte Befehls-Code angezeigt (ID 'pythonCode' sollte ggf. in 'generatedCode' umbenannt werden) -->
       <div id="codePanel"><pre id="pythonCode"></pre></div>
     </div>
     <div class="side-content" id="tab-console">
@@ -85,7 +89,7 @@
   </div>
 </div>
 
-<!-- BOTTOM CONSOLE: Systemmeldungen und Error-Logging -->
+<!-- BOTTOM CONSOLE -->
 <div id="bottomBar">
   <div class="bottom-bar-header">
     <span>⬛ Output Console</span>
@@ -94,14 +98,24 @@
   <div id="mainConsole"></div>
 </div>
 
-<!-- STATUS BAR: Metadaten wie Blockanzahl und Verbindungsstatus -->
+<!-- STATUS BAR -->
 <div id="statusBar">
   <div class="status-item active">Blocks: <span id="blockCount">0</span></div>
   <div class="status-item" id="btStatus">Serial: <span id="btStatusText" style="color:#555">Disconnected</span></div>
   <div class="status-item" id="modeStatus">Renderer: Zelos</div>
 </div>
 
-<!-- HAUPT-SKRIPT: Modulare Initialisierung der App -->
 <script type="module" src="./main.js"></script>
+
+<script>
+  // Parche para telemetría DIST — añadir al handler UDP existente en main.js
+  // En tu main.js, donde procesas los mensajes UDP entrantes, añade:
+  //
+  //   case 'DIST':
+  //     document.getElementById('tDist').textContent = value;
+  //     break;
+  //
+  // El formato que llega del ESP32 es: "DIST:1234"  (milímetros)
+</script>
 </body>
 </html>
